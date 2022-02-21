@@ -3,10 +3,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -21,6 +17,7 @@ export default function LoginForm() {
   const [showFailureAlert, setShowFailureAlert] = React.useState(false);
   const [showWelcomePage, setShowWelcomePage] = React.useState(false);
 
+  // This is used to show the alert
   React.useEffect(() => {
     if (showSuccessAlert) {
       setTimeout(() => {
@@ -33,10 +30,16 @@ export default function LoginForm() {
       setTimeout(() => setShowFailureAlert(false), 1500);
     }
   }, [showSuccessAlert, showFailureAlert]);
+
+
+
+
+  // Handles when user clicks the login button, and sends a request to the backend.
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
+
+    // This is the fetch to backend, we send a POST request with username and password in the body
     let result = await fetch("http://localhost:8080/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,13 +50,17 @@ export default function LoginForm() {
     });
     result = await result.json();
 
+    // If 200 it means it is successful, show him success alert and when the success alert is shown, it redirects to welcome.
     if (result.status === 200) {
       setShowSuccessAlert(true);
     } else {
+      // Unauthorized (401), show him alert and stay on login page.
       setShowFailureAlert(true);
     }
   };
 
+
+  // HTML for the welcome page
   if (showWelcomePage) {
     return (
       <>
@@ -81,6 +88,8 @@ export default function LoginForm() {
       </>
     );
   }
+
+  // Main HTML returned
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -131,10 +140,6 @@ export default function LoginForm() {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             <Button
               type="submit"
               fullWidth
@@ -143,18 +148,6 @@ export default function LoginForm() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
